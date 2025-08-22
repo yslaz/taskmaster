@@ -144,7 +144,7 @@ TaskMaster is a comprehensive task management application that works both as a w
 
 ```bash
 # Clone repository
-git clone https://github.com/your-username/taskmaster.git
+git clone https://github.com/yslaz/taskmaster.git
 cd taskmaster
 
 # Verify structure
