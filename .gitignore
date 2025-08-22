@@ -1,0 +1,69 @@
+# ==============================================
+# TASKMASTER - GITIGNORE
+# ==============================================
+
+# Archivos de entorno con datos sensibles
+.env
+
+# Logs
+*.log
+logs/
+
+# Base de datos local
+*.db
+*.sqlite
+*.sqlite3
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+
+# Directorios de IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos de backup
+*.bak
+*.backup
+
+# Docker
+docker-compose.override.yml
+
+# Certificados y claves
+*.pem
+*.key
+*.crt
+*.p12
+
+# Compilaciones locales
+target/
+dist/
+build/
+out/
+
+# Node modules (si hay scripts de desarrollo)
+node_modules/
+
+# Rust específico
+Cargo.lock
+target/
+**/*.rs.bk
+
+# Frontend específico (Tauri)
+frontend/src-tauri/target/
+frontend/dist/
+frontend/node_modules/
+
+# Backend específico
+backend/target/
+
+# Variables de entorno locales
+backend/.env
+frontend/.env
+
+# Archivos de desarrollo
+*.local

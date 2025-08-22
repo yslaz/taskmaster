@@ -1,0 +1,61 @@
+[package]
+name = "taskmaster-backend"
+version = "0.1.0"
+edition = "2021"
+default-run = "taskmaster-backend"
+
+[[bin]]
+name = "taskmaster-backend"
+path = "src/main.rs"
+
+[[bin]]
+name = "check_db"
+path = "src/bin/check_db.rs"
+
+[dependencies]
+# Web framework
+actix-web = "4.4"
+actix-cors = "0.6"
+actix-web-actors = "4.3"
+actix = "0.13"
+
+# Database
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "json", "migrate"] }
+futures-util = "0.3"
+
+# Async runtime
+tokio = { version = "1.0", features = ["full"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Authentication
+jsonwebtoken = "9.2"
+bcrypt = "0.15"
+
+# Utilities
+uuid = { version = "1.6", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Environment variables
+dotenvy = "0.15"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing-actix-web = "0.7"
+
+# Validation
+validator = { version = "0.16", features = ["derive"] }
+
+[dev-dependencies]
+actix-rt = "2.9"
+reqwest = { version = "0.11", features = ["json"] }
+tokio-test = "0.4"
+mockall = "0.11"
+tempfile = "3.0"
+serde_json = "1.0"
+awc = "3"

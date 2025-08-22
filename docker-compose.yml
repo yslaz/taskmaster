@@ -1,0 +1,95 @@
+# TaskMaster - Docker Compose Configuration
+# ============================================
+# Orquesta PostgreSQL + Backend API
+# ============================================
+
+
+services:
+  # ============================================
+  # PostgreSQL Database
+  # ============================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: taskmaster-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-taskmaster}
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - taskmaster-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-admin} -d ${POSTGRES_DB:-taskmaster}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # Backend API (Rust + Actix-web)
+  # ============================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: taskmaster-backend
+    restart: unless-stopped
+    environment:
+      # Database connection
+      DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${DB_PASSWORD}@postgres:5432/${POSTGRES_DB:-taskmaster}
+      
+      # Database pool settings
+      DB_MAX_CONNECTIONS: ${DB_MAX_CONNECTIONS:-10}
+      DB_MIN_CONNECTIONS: ${DB_MIN_CONNECTIONS:-2}
+      DB_ACQUIRE_TIMEOUT: ${DB_ACQUIRE_TIMEOUT:-60}
+      DB_IDLE_TIMEOUT: ${DB_IDLE_TIMEOUT:-600}
+      DB_MAX_LIFETIME: ${DB_MAX_LIFETIME:-1800}
+      DB_CONNECT_TIMEOUT: ${DB_CONNECT_TIMEOUT:-30}
+      
+      # Server configuration
+      SERVER_HOST: 0.0.0.0
+      SERVER_PORT: 8000
+      
+      # Security
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION_HOURS: ${JWT_EXPIRATION_HOURS:-24}
+      
+      # CORS
+      CORS_ORIGIN: ${CORS_ORIGIN:-*}
+      
+      # Logging
+      RUST_LOG: ${RUST_LOG:-taskmaster_backend=info,actix_web=info,sqlx=warn}
+      
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - taskmaster-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# ============================================
+# Volumes
+# ============================================
+volumes:
+  postgres_data:
+    driver: local
+    name: taskmaster_postgres_data
+
+# ============================================
+# Networks
+# ============================================
+networks:
+  taskmaster-network:
+    driver: bridge
+    name: taskmaster_network

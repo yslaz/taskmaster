@@ -1,0 +1,57 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0.0",
+  "productName": "TaskMaster",
+  "version": "1.0.0",
+  "identifier": "com.taskmaster.taskmaster",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npx vite build --mode production",
+    "devUrl": "http://localhost:5173",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "TaskMaster",
+        "width": 1200,
+        "height": 800,
+        "resizable": true,
+        "fullscreen": false,
+        "center": true,
+        "minWidth": 800,
+        "minHeight": 600
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png", 
+      "icons/128x128@2x.png",
+      "icons/icon.ico"
+    ],
+    "publisher": "TaskMaster Team",
+    "category": "Productivity",
+    "shortDescription": "Gestor de Tareas Avanzado",
+    "longDescription": "Una aplicación completa de gestión de tareas construida con Rust y React",
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": "",
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper",
+        "silent": true
+      }
+    }
+  },
+  "plugins": {
+    "shell": {
+      "open": true
+    }
+  }
+}
